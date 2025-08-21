@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+vector<pair<ll, ll>>v;
+ll n, m, total, x, y;
+
+ll rec(ll i = 0, ll curr = 0 , ll need = x) {
+
+	if (i == n) return (need < 0 ? curr : 1e18);
+
+	ll p1 = rec(i + 1, curr, need);
+	ll p2 = rec(i + 1, curr + v[i].second, need - v[i].first * y);
+
+	return min(p1, p2);
+}
+
+int main() {
+
+	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+
+	int t = 1;
+	//cin >> t;
+
+	while (t--) {
+
+		cin >> n;
+		v.resize(n);
+		for (int i = 0; i < n; i++) cin >> v[i].first >> v[i].second, total += v[i].first;
+
+		cin >> m;
+		for (int i = 1; i <= m; i++) {
+			cin >> x >> y;
+			if (total * y < x) cout << "Case " << i << ": " << "IMPOSSIBLE\n";
+			else cout << "Case " << i << ": " << rec() << "\n";
+		}
+
+	}
+
+	return 0;
+}

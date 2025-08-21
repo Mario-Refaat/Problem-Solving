@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+
+ll dp[30001][500] , d , freq[30001];
+
+ll f(ll i, ll j) {
+
+	ll curr = j - (d - 250);
+	if (i >= 30001) return 0;
+
+	ll& ret = dp[i][curr];
+	if (~ret) return ret;
+
+	ret = -1e18;
+	if (j == 1) ret = freq[i] + max(f(i + j, j), f(i + j + 1, j + 1));
+	else ret = freq[i] + max(max(f(i + j - 1, j - 1), f(i + j, j)), f(i + j + 1, j + 1));
+
+	return ret;
+}
+
+int main() {
+
+	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+
+	int t = 1;
+	//cin >> t;
+
+	while (t--) {
+
+		memset(dp, -1, sizeof dp);
+
+		ll n;
+		cin >> n >> d;
+		for (int i = 0; i < n; i++) {
+			ll x;
+			cin >> x;
+			freq[x]++;
+		}
+		cout << f(d, d);
+	}
+
+	return 0;
+}

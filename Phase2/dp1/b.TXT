@@ -1,0 +1,41 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+ll n;
+
+int main() {
+
+	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+
+	int t = 1;
+	//cin >> t;
+
+	while (cin >> n) {
+
+		vector<ll>v(n) , tail , lis(n) , lds(n);
+		for (int i = 0; i < n; i++) cin >> v[i];
+
+		for (int i = 0; i < n; i++) {
+			if (tail.empty() || tail.back() < v[i]) tail.push_back(v[i]);
+			else tail[lower_bound(tail.begin(), tail.end(), v[i]) - tail.begin()] = v[i];
+			lis[i] = tail.size();
+		}
+
+		tail.clear();
+		for (int i = n-1; i>=0; i--) {
+			if (tail.empty() || tail.back() < v[i]) tail.push_back(v[i]);
+			else tail[lower_bound(tail.begin(), tail.end(), v[i]) - tail.begin()] = v[i];
+			lds[i] = tail.size();
+		}
+
+		ll ans = 0;
+		for (int i = 0; i < n; i++)
+			ans = max(ans, min(lis[i], lds[i]) * 2 - 1);
+
+		cout << ans << "\n";
+
+	}
+
+	return 0;
+}

@@ -1,0 +1,78 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+ll n, l, c;
+vector<ll> sumt , t;
+
+vector<pair<ll, ll>> dp;
+vector<bool> vis;
+
+pair<ll, ll> rec(ll i) {
+    if (i == n + 1)
+        return { 0, 0 };
+
+    if (vis[i])
+        return dp[i];
+
+    vis[i] = true;
+    dp[i].first = 1e18; dp[i].second = 1e18;
+
+    for (int j = i; j <= n; j++) {
+        ll total = sumt[j] - sumt[i - 1];
+        if (total > l) break;
+
+        ll freeT = l - total;
+        ll di;
+
+        if (freeT == 0)          di = 0;
+        else if (freeT <= 10)    di = -c;
+        else                     di = (freeT - 10) * (freeT - 10);
+
+        pair<ll, ll> next = rec(j + 1);
+        ll  currL = 1 + next.first;
+        ll   currDI = di + next.second;
+
+        if (currL < dp[i].first || (currL == dp[i].first && currDI < dp[i].second)) {
+            dp[i].first = currL;
+            dp[i].second = currDI;
+        }
+    }
+
+    return dp[i];
+}
+
+int main() {
+    
+    ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+
+    int tc = 0;
+    while (true) {
+        cin >> n;
+        if (n == 0) break;
+        tc++;
+        if (tc > 1) cout << "\n";
+
+        cin >> l >> c;
+        t.assign(n + 1, 0);
+        for (int i = 1; i <= n; i++)
+            cin >> t[i];
+
+        sumt.assign(n + 1, 0);
+        for (int i = 1; i <= n; i++)
+            sumt[i] = sumt[i - 1] + t[i];
+
+        dp.assign(n + 2, { 0, 0 });
+        vis.assign(n + 2, false);
+
+        pair<ll, ll> ans = rec(1);
+        ll minLects = ans.first;
+        ll  minDI = ans.second;
+
+        cout << "Case " << tc << ":\n";
+        cout << "Minimum number of lectures: " << minLects << "\n";
+        cout << "Total dissatisfaction index: " << minDI << "\n";
+    }
+
+    return 0;
+}

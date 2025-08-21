@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+
+ll n, x, dp[101][10001];
+vector<ll>v;
+
+ll f(ll i, ll x) {
+
+	if (x < 0) return -1e18;
+	if (i == n) return 0;
+
+	ll& ret = dp[i][x];
+	if (~ret) return ret;
+
+	ret = -1e18;
+	ret = max(ret, f(i + 1, x));
+	ret = max(ret, f(i + 1, x-v[i])+1);
+
+	return ret;
+}
+
+int main() {
+
+	ios_base::sync_with_stdio(false); cin.tie(NULL); cout.tie(NULL);
+
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+
+	int t = 1;
+	//cin >> t;
+
+	while (t--) {
+
+		memset(dp, -1, sizeof dp);
+
+		cin >> n >> x;
+		v.resize(n);
+		for (int i = 0; i < n; i++) cin >> v[i], v[i] *= (n - i);
+		cout << f(0, x);
+
+	}
+
+	return 0;
+}
